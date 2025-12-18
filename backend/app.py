@@ -22,6 +22,8 @@ from blueprints.bourses import bourses_bp
 from blueprints.bibliotheque import bibliotheque_bp
 from blueprints.stages import stages_bp
 from blueprints.infrastructure import infrastructure_bp
+from blueprints.ai_analytics import ai_analytics_bp
+from blueprints.gamification import gamification_bp
 
 # Import sécurité
 from utils.security import init_security
@@ -66,6 +68,8 @@ def create_app():
     app.register_blueprint(bibliotheque_bp, url_prefix='/api/bibliotheque')
     app.register_blueprint(stages_bp, url_prefix='/api/stages')
     app.register_blueprint(infrastructure_bp, url_prefix='/api/infrastructure')
+    app.register_blueprint(ai_analytics_bp, url_prefix='/api/ai')
+    app.register_blueprint(gamification_bp, url_prefix='/api/gamification')
     
     # Route de santé
     @app.route('/api/health')
