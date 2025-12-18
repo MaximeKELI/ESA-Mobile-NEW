@@ -30,6 +30,91 @@ Application mobile complète de gestion scolaire pour l'École Supérieure des A
 - Alertes de retard de paiement
 - Verrouillage automatique en cas d'impayés
 
+#### Module inscriptions en ligne
+- Candidatures en ligne (publique)
+- Suivi des candidatures
+- Traitement des candidatures (accepter/refuser)
+- Création automatique de compte étudiant
+- Gestion des concours d'entrée
+- Résultats de concours
+
+#### Module bourses et aides
+- Gestion des types de bourses
+- Attribution de bourses aux étudiants
+- Suivi des paiements de bourses
+- Gestion des statuts (active, suspendue, terminée)
+
+#### Module bibliothèque
+- Catalogue des ouvrages
+- Gestion des exemplaires
+- Emprunts et retours de livres
+- Réservations d'ouvrages
+- Amendes automatiques pour retards
+- Recherche d'ouvrages
+
+#### Module stages et alternances
+- Gestion des entreprises partenaires
+- Offres de stage
+- Conventions de stage
+- Signature électronique des conventions
+- Évaluations de stage
+- Suivi des stages
+
+#### Module infrastructure
+- Gestion des salles et amphithéâtres
+- Réservations de salles avec vérification de disponibilité
+- Gestion des équipements
+- Maintenance des équipements
+- Inventaire
+
+#### Module ressources humaines
+- Gestion du personnel (enseignants, administratif, technique)
+- Gestion des contrats (CDI, CDD, vacataires)
+- Gestion des congés
+- Évaluations du personnel
+
+#### Module vie étudiante
+- Gestion des clubs et associations
+- Gestion des événements et activités
+- Gestion des compétitions
+- Gestion des sorties pédagogiques
+
+#### Module diplômes et certifications
+- Gestion des diplômes délivrés
+- Gestion des certifications
+- Gestion des attestations
+- Gestion des équivalences internationales
+
+#### Module alumni
+- Base de données des anciens étudiants
+- Réseau des anciens
+- Gestion des dons des alumni
+- Événements alumni
+
+#### Module recherche
+- Gestion des projets de recherche
+- Gestion des publications
+- Gestion des laboratoires
+- Gestion des financements recherche
+
+#### Module logistique
+- Gestion des transports scolaires
+- Gestion de la restauration
+- Gestion de l'internat
+- Gestion des uniformes
+
+#### Module santé
+- Gestion des dossiers médicaux
+- Gestion des visites médicales
+- Gestion des vaccinations
+- Gestion des urgences médicales
+
+#### Module discipline
+- Gestion des sanctions
+- Gestion des avertissements
+- Gestion des commissions disciplinaires
+- Gestion des récompenses
+
 #### Autres fonctionnalités
 - Emplois du temps
 - Cartes étudiantes numériques (QR code)
@@ -39,6 +124,9 @@ Application mobile complète de gestion scolaire pour l'École Supérieure des A
 - Tableau de bord avec statistiques
 - Mode hors ligne avec synchronisation
 - Export des données (PDF/CSV)
+- Gestion des prérequis et équivalences
+- Gestion des transferts étudiants
+- Gestion des rattrapages
 
 ## 🏗️ Architecture
 
@@ -164,12 +252,23 @@ flutter run
 
 ## 📊 Base de données
 
-La base de données SQLite contient toutes les tables nécessaires :
+La base de données SQLite contient **60+ tables** pour une gestion complète :
 - Utilisateurs et profils
 - Années académiques, filières, niveaux, classes
 - Matières et notes
 - Paiements et frais
-- Absences et emplois du temps
+- Bourses et aides financières
+- Candidatures et concours
+- Bibliothèque (ouvrages, emprunts, réservations)
+- Stages et entreprises
+- Infrastructure (salles, équipements, maintenances)
+- Ressources humaines (contrats, congés, évaluations)
+- Événements et clubs
+- Diplômes et certifications
+- Alumni
+- Recherche et publications
+- Transports, restauration, internat
+- Santé et discipline
 - Messages et notifications
 - Logs de connexion et actions
 
