@@ -24,6 +24,14 @@ from blueprints.stages import stages_bp
 from blueprints.infrastructure import infrastructure_bp
 from blueprints.ai_analytics import ai_analytics_bp
 from blueprints.gamification import gamification_bp
+from blueprints.elearning import elearning_bp
+from blueprints.mobile_money import mobile_money_bp
+from blueprints.chat_realtime import chat_realtime_bp
+from blueprints.workflows import workflows_bp
+from blueprints.dashboards import dashboards_bp
+from blueprints.portfolio import portfolio_bp
+from blueprints.chatbot import chatbot_bp
+from blueprints.exports import exports_bp
 
 # Import sécurité
 from utils.security import init_security
@@ -70,6 +78,14 @@ def create_app():
     app.register_blueprint(infrastructure_bp, url_prefix='/api/infrastructure')
     app.register_blueprint(ai_analytics_bp, url_prefix='/api/ai')
     app.register_blueprint(gamification_bp, url_prefix='/api/gamification')
+    app.register_blueprint(elearning_bp, url_prefix='/api/elearning')
+    app.register_blueprint(mobile_money_bp, url_prefix='/api/mobile-money')
+    app.register_blueprint(chat_realtime_bp, url_prefix='/api/chat')
+    app.register_blueprint(workflows_bp, url_prefix='/api/workflows')
+    app.register_blueprint(dashboards_bp, url_prefix='/api/dashboards')
+    app.register_blueprint(portfolio_bp, url_prefix='/api/portfolio')
+    app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot')
+    app.register_blueprint(exports_bp, url_prefix='/api/exports')
     
     # Route de santé
     @app.route('/api/health')
