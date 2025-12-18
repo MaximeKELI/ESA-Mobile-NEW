@@ -8,6 +8,7 @@ from utils.auth import role_required, get_current_user, log_action
 from utils.validators import validate_required
 from datetime import datetime, timedelta
 import json
+from functools import wraps
 
 workflows_bp = Blueprint('workflows', __name__)
 

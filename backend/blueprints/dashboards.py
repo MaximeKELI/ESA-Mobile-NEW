@@ -4,8 +4,10 @@ Blueprint pour les tableaux de bord personnalisables
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from database.db import get_db
-from utils.auth import get_current_user
+from utils.auth import get_current_user, role_required
 from utils.validators import validate_required
+from flask_jwt_extended import jwt_required
+from datetime import datetime
 import json
 
 dashboards_bp = Blueprint('dashboards', __name__)
