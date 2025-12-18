@@ -3,8 +3,6 @@ Blueprint d'authentification
 """
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 from database.db import get_db
 from utils.auth import hash_password, verify_password, log_connection, generate_reset_token
 from utils.validators import validate_email_format, validate_required
@@ -16,16 +14,7 @@ from datetime import datetime, timedelta
 
 auth_bp = Blueprint('auth', __name__)
 
-# Rate limiter pour l'authentification
-limiter = None  # Sera initialisé dans app.py
-
-def init_auth_limiter(app_limiter):
-    """Initialise le rate limiter pour l'auth"""
-    global limiter
-    limiter = app_limiter
-
 @auth_bp.route('/login', methods=['POST'])
-@limiter.limit("5 per minute") if limiter else lambda f: f
 def login():
     """Authentification d'un utilisateur"""
     data = request.get_json()
