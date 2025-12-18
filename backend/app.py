@@ -16,6 +16,11 @@ from blueprints.enseignant import enseignant_bp
 from blueprints.etudiant import etudiant_bp
 from blueprints.parent import parent_bp
 from blueprints.commun import commun_bp
+from blueprints.inscriptions import inscriptions_bp
+from blueprints.bourses import bourses_bp
+from blueprints.bibliotheque import bibliotheque_bp
+from blueprints.stages import stages_bp
+from blueprints.infrastructure import infrastructure_bp
 
 def create_app():
     """Factory function pour créer l'application Flask"""
@@ -48,6 +53,11 @@ def create_app():
     app.register_blueprint(etudiant_bp, url_prefix='/api/etudiant')
     app.register_blueprint(parent_bp, url_prefix='/api/parent')
     app.register_blueprint(commun_bp, url_prefix='/api/commun')
+    app.register_blueprint(inscriptions_bp, url_prefix='/api/inscriptions')
+    app.register_blueprint(bourses_bp, url_prefix='/api/bourses')
+    app.register_blueprint(bibliotheque_bp, url_prefix='/api/bibliotheque')
+    app.register_blueprint(stages_bp, url_prefix='/api/stages')
+    app.register_blueprint(infrastructure_bp, url_prefix='/api/infrastructure')
     
     # Route de santé
     @app.route('/api/health')
