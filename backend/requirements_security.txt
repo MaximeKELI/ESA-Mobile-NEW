@@ -1,0 +1,4 @@
+# Dépendances supplémentaires pour la sécurité
+cryptography==41.0.7
+flask-limiter==3.5.0
+

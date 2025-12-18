@@ -53,6 +53,10 @@ def create_app():
     # Initialiser la sécurité
     limiter = init_security(app)
     
+    # Initialiser le rate limiter pour l'auth
+    from blueprints.auth import init_auth_limiter
+    init_auth_limiter(limiter)
+    
     # Enregistrer les blueprints
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
