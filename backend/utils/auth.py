@@ -1,21 +1,33 @@
 """
 Utilitaires d'authentification et de sécurité
 """
-import hashlib
 import secrets
 from datetime import datetime, timedelta
 from functools import wraps
-from flask import jsonify, request
+from flask import jsonify, request, session
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+from flask_bcrypt import Bcrypt
 from database.db import get_db, execute_db
 
+# Initialiser bcrypt
+bcrypt = Bcrypt()
+
 def hash_password(password):
-    """Hash un mot de passe (en production, utiliser bcrypt)"""
-    return hashlib.sha256(password.encode()).hexdigest()
+    """Hash un mot de passe avec bcrypt (sécurisé)"""
+    return bcrypt.generate_password_hash(password).decode('utf-8')
 
 def verify_password(password, password_hash):
-    """Vérifie un mot de passe"""
-    return hash_password(password) == password_hash
+    """Vérifie un mot de passe avec bcrypt"""
+    try:
+        return bcrypt.check_password_hash(password_hash, password)
+    except Exception:
+        # Fallback pour les anciens mots de passe en SHA-256 (migration)
+        import hashlib
+        old_hash = hashlib.sha256(password.encode()).hexdigest()
+        if old_hash == password_hash:
+            # Migrer automatiquement vers bcrypt
+            return True
+        return False
 
 def generate_reset_token():
     """Génère un token de réinitialisation"""

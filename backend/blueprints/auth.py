@@ -3,14 +3,29 @@ Blueprint d'authentification
 """
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from database.db import get_db
 from utils.auth import hash_password, verify_password, log_connection, generate_reset_token
 from utils.validators import validate_email_format, validate_required
+from utils.security import (
+    check_rate_limit, detect_suspicious_activity, log_security_event,
+    validate_password_strength, sanitize_input, sql_injection_check
+)
 from datetime import datetime, timedelta
 
 auth_bp = Blueprint('auth', __name__)
 
+# Rate limiter pour l'authentification
+limiter = None  # Sera initialisé dans app.py
+
+def init_auth_limiter(app_limiter):
+    """Initialise le rate limiter pour l'auth"""
+    global limiter
+    limiter = app_limiter
+
 @auth_bp.route('/login', methods=['POST'])
+@limiter.limit("5 per minute") if limiter else lambda f: f
 def login():
     """Authentification d'un utilisateur"""
     data = request.get_json()
@@ -20,8 +35,21 @@ def login():
     if not valid:
         return jsonify({'error': error}), 400
     
-    username = data.get('username')
+    # Sanitization des entrées
+    username = sanitize_input(data.get('username'))
     password = data.get('password')
+    
+    # Vérification d'injection SQL
+    sql_check, sql_error = sql_injection_check({'username': username})
+    if sql_check:
+        log_security_event('sql_injection_attempt', None, {'username': username}, 'high')
+        return jsonify({'error': 'Requête invalide'}), 400
+    
+    # Rate limiting manuel supplémentaire
+    ip_address = request.remote_addr
+    if not check_rate_limit(f"login_{ip_address}", limit=5, window=60):
+        log_security_event('rate_limit_exceeded', None, {'ip': ip_address}, 'warning')
+        return jsonify({'error': 'Trop de tentatives. Veuillez réessayer plus tard.'}), 429
     
     db = get_db()
     user = db.execute(
@@ -30,16 +58,23 @@ def login():
     ).fetchone()
     
     # Log de la tentative de connexion
-    ip_address = request.remote_addr
     user_agent = request.headers.get('User-Agent', '')
     
     if not user or not verify_password(password, user['password_hash']):
         log_connection(None, username, ip_address, user_agent, 'echec', 'Identifiants invalides')
+        log_security_event('failed_login', None, {'username': username, 'ip': ip_address}, 'warning')
         return jsonify({'error': 'Identifiants invalides'}), 401
     
     if not user['is_active']:
         log_connection(user['id'], username, ip_address, user_agent, 'echec', 'Compte désactivé')
+        log_security_event('disabled_account_login', user['id'], {'username': username}, 'warning')
         return jsonify({'error': 'Compte désactivé'}), 403
+    
+    # Détection d'activité suspecte
+    is_suspicious, suspicion_reason = detect_suspicious_activity(user['id'], 'login', ip_address)
+    if is_suspicious:
+        log_security_event('suspicious_activity', user['id'], {'reason': suspicion_reason}, 'high')
+        # Ne pas bloquer, mais logger
     
     # Mettre à jour la dernière connexion
     db.execute(
@@ -96,8 +131,14 @@ def change_password():
     old_password = data.get('old_password')
     new_password = data.get('new_password')
     
-    if len(new_password) < 6:
-        return jsonify({'error': 'Le mot de passe doit contenir au moins 6 caractères'}), 400
+    # Validation de la force du mot de passe
+    is_strong, errors = validate_password_strength(new_password)
+    if not is_strong:
+        return jsonify({'error': 'Mot de passe faible', 'details': errors}), 400
+    
+    # Vérifier que le nouveau mot de passe est différent de l'ancien
+    if old_password == new_password:
+        return jsonify({'error': 'Le nouveau mot de passe doit être différent de l\'ancien'}), 400
     
     db = get_db()
     user = db.execute("SELECT password_hash FROM users WHERE id = ?", (current_user_id,)).fetchone()

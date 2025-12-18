@@ -5,6 +5,7 @@ Gestion scolaire complète avec API REST
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
 import os
 from datetime import timedelta
 
@@ -21,6 +22,9 @@ from blueprints.bourses import bourses_bp
 from blueprints.bibliotheque import bibliotheque_bp
 from blueprints.stages import stages_bp
 from blueprints.infrastructure import infrastructure_bp
+
+# Import sécurité
+from utils.security import init_security
 
 def create_app():
     """Factory function pour créer l'application Flask"""
@@ -42,8 +46,12 @@ def create_app():
     os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'pdf'), exist_ok=True)
     
     # Initialiser les extensions
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
     jwt = JWTManager(app)
+    bcrypt = Bcrypt(app)
+    
+    # Initialiser la sécurité
+    limiter = init_security(app)
     
     # Enregistrer les blueprints
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
