@@ -51,6 +51,7 @@ def send_email_notification(user_email, subject, body, html_body=None):
 def send_sms_notification(phone_number, message):
     """Envoie une notification par SMS"""
     try:
+        import os
         from twilio.rest import Client
         
         account_sid = os.getenv('TWILIO_ACCOUNT_SID')
