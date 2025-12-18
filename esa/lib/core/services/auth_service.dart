@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_model.dart';
 import 'api_service.dart';
@@ -26,9 +27,7 @@ class AuthService {
       try {
         _currentUser = UserModel.fromJson(
           Map<String, dynamic>.from(
-            Map<String, dynamic>.from(
-              (await _prefs?.getString('current_user'))?.split(',') ?? []
-            )
+            json.decode(userJson) as Map
           )
         );
       } catch (e) {
@@ -59,7 +58,7 @@ class AuthService {
 
         // Sauvegarder l'utilisateur
         _currentUser = UserModel.fromJson(data['user'] as Map<String, dynamic>);
-        await _prefs?.setString('current_user', _currentUser!.toJson().toString());
+        await _prefs?.setString('current_user', json.encode(_currentUser!.toJson()));
 
         return {
           'success': true,
@@ -177,7 +176,7 @@ class AuthService {
       final response = await _apiService.get(ApiConstants.me);
       if (response.statusCode == 200) {
         _currentUser = UserModel.fromJson(response.data as Map<String, dynamic>);
-        await _prefs?.setString('current_user', _currentUser!.toJson().toString());
+        await _prefs?.setString('current_user', json.encode(_currentUser!.toJson()));
       }
     } catch (e) {
       // Ignorer les erreurs
