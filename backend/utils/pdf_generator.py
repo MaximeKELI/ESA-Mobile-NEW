@@ -122,3 +122,53 @@ def generate_bulletin(etudiant_data, notes_data, output_path):
     doc.build(story)
     return output_path
 
+def generate_cv_pdf(etudiant_data, portfolio_data, output_path):
+    """Génère un CV PDF à partir du portfolio"""
+    doc = SimpleDocTemplate(output_path, pagesize=A4)
+    story = []
+    styles = getSampleStyleSheet()
+    
+    # En-tête
+    title_style = ParagraphStyle(
+        'CVTitle',
+        parent=styles['Heading1'],
+        fontSize=20,
+        textColor=colors.HexColor('#1a237e'),
+        spaceAfter=10,
+        alignment=TA_CENTER
+    )
+    
+    story.append(Paragraph(f"{etudiant_data.get('prenom', '')} {etudiant_data.get('nom', '')}", title_style))
+    story.append(Paragraph(etudiant_data.get('email', ''), styles['Normal']))
+    if etudiant_data.get('telephone'):
+        story.append(Paragraph(etudiant_data.get('telephone'), styles['Normal']))
+    story.append(Spacer(1, 0.5*cm))
+    
+    # Compétences
+    if portfolio_data.get('competences'):
+        story.append(Paragraph("COMPÉTENCES", styles['Heading2']))
+        for comp in portfolio_data['competences']:
+            story.append(Paragraph(f"• {comp.get('competence_libelle', '')} - Niveau {comp.get('niveau', 0)}/5", 
+                                 styles['Normal']))
+        story.append(Spacer(1, 0.3*cm))
+    
+    # Projets
+    if portfolio_data.get('projets'):
+        story.append(Paragraph("PROJETS", styles['Heading2']))
+        for projet in portfolio_data['projets']:
+            story.append(Paragraph(f"• {projet.get('titre', '')}", styles['Normal']))
+            if projet.get('description'):
+                story.append(Paragraph(projet.get('description'), styles['Normal']))
+        story.append(Spacer(1, 0.3*cm))
+    
+    # Certifications
+    if portfolio_data.get('certifications'):
+        story.append(Paragraph("CERTIFICATIONS", styles['Heading2']))
+        for cert in portfolio_data['certifications']:
+            story.append(Paragraph(f"• {cert.get('nom_certification', '')} - {cert.get('organisme', '')}", 
+                                 styles['Normal']))
+        story.append(Spacer(1, 0.3*cm))
+    
+    doc.build(story)
+    return output_path
+
