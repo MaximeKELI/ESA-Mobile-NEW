@@ -80,7 +80,7 @@ def sanitize_input(input_string):
         cleaned = cleaned.replace(char, '')
     
     for char in dangerous_xss:
-        cleaned = cleaned.replace(char, '', flags=re.IGNORECASE)
+        cleaned = re.sub(re.escape(char), '', cleaned, flags=re.IGNORECASE)
     
     return cleaned.strip()
 
