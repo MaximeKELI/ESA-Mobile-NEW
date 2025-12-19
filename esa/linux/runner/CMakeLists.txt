@@ -22,11 +22,8 @@ add_definitions(-DAPPLICATION_ID="${APPLICATION_ID}")
 # Add dependency libraries. Add any application-specific dependencies here.
 target_link_libraries(${BINARY_NAME} PRIVATE flutter)
 target_link_libraries(${BINARY_NAME} PRIVATE PkgConfig::GTK)
-# Fix for libsecret linking issues - add GLib explicitly with linker flags
-target_link_options(${BINARY_NAME} PRIVATE 
-  -Wl,--no-as-needed 
-  -lglib-2.0 
-  -lgobject-2.0
-)
+# Fix for libsecret linking issues - link GLib and libsecret explicitly
+target_link_libraries(${BINARY_NAME} PRIVATE PkgConfig::GLIB)
+target_link_libraries(${BINARY_NAME} PRIVATE PkgConfig::SECRET)
 
 target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")
