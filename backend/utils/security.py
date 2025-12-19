@@ -167,21 +167,33 @@ def log_security_event(event_type, user_id, details, severity='info', ip_address
         except:
             ip = ip_address or 'unknown'
         
-        db.execute("""
-            INSERT INTO logs_actions (user_id, action, table_affectee, 
-                                     nouvelles_valeurs, ip_address)
-            VALUES (?, ?, ?, ?, ?)
-        """, (
-            effective_user_id,
-            f"security_{event_type}",
-            'security',
-            str(details),
-            ip
-        ))
-        db.commit()
+        # Utiliser un timeout et gérer les erreurs de verrouillage
+        try:
+            db.execute("""
+                INSERT INTO logs_actions (user_id, action, table_affectee, 
+                                         nouvelles_valeurs, ip_address)
+                VALUES (?, ?, ?, ?, ?)
+            """, (
+                effective_user_id,
+                f"security_{event_type}",
+                'security',
+                str(details),
+                ip
+            ))
+            db.commit()
+        except Exception as db_error:
+            # Si la base est verrouillée, rollback et ignorer
+            try:
+                db.rollback()
+            except:
+                pass
+            # Ne pas lever l'exception pour ne pas bloquer l'application
+            import logging
+            logging.warning(f"Erreur DB lors du logging de sécurité: {db_error}")
     except Exception as e:
         # Ne pas faire échouer l'application si le logging échoue
-        print(f"Erreur lors du logging de sécurité: {e}")
+        import logging
+        logging.warning(f"Erreur lors du logging de sécurité: {e}")
 
 def check_rate_limit(identifier, limit=5, window=60):
     """Vérifie le rate limiting manuel"""
