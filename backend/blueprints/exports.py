@@ -5,7 +5,9 @@ from flask import Blueprint, request, jsonify, send_file
 from flask_jwt_extended import jwt_required
 from database.db import get_db
 from utils.auth import role_required, get_current_user
+from utils.validators import validate_required
 from utils.pdf_generator import generate_receipt, generate_bulletin
+from reportlab.lib import colors
 from datetime import datetime
 import os
 import json

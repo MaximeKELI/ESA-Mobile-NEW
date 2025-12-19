@@ -5,6 +5,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from database.db import get_db
 from utils.auth import get_current_user
+from utils.validators import validate_required
 from datetime import datetime
 import json
 

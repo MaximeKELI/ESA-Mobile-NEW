@@ -8,6 +8,7 @@ from utils.auth import get_current_user, role_required, log_action
 from utils.validators import validate_required
 from datetime import datetime
 import json
+import os
 
 portfolio_bp = Blueprint('portfolio', __name__)
 
