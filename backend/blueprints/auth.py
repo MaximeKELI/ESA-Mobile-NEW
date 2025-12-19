@@ -190,22 +190,33 @@ def register():
         """, (user_id, data.get('lien_parente', 'tuteur')))
         db.commit()
     
-    # Récupérer l'utilisateur créé
+    # Récupérer l'utilisateur créé avec tous les champs
     user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
     
     from utils.auth import log_action
-    log_action(user_id, 'inscription', 'users', user_id)
+    try:
+        log_action(user_id, 'inscription', 'users', user_id)
+    except:
+        pass  # Ne pas bloquer si le logging échoue
+    
+    # Construire la réponse avec tous les champs nécessaires
+    user_dict = {
+        'id': user['id'],
+        'username': user['username'],
+        'email': user['email'],
+        'role': user['role'],
+        'nom': user['nom'],
+        'prenom': user['prenom'],
+        'telephone': user.get('telephone'),
+        'adresse': user.get('adresse'),
+        'photo_path': user.get('photo_path'),
+        'is_active': bool(user['is_active']),
+        'last_login': user.get('last_login'),
+    }
     
     return jsonify({
         'message': 'Inscription réussie',
-        'user': {
-            'id': user['id'],
-            'username': user['username'],
-            'email': user['email'],
-            'role': user['role'],
-            'nom': user['nom'],
-            'prenom': user['prenom']
-        }
+        'user': user_dict
     }), 201
 
 @auth_bp.route('/refresh', methods=['POST'])
