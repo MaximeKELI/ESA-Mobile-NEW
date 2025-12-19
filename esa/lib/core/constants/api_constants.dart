@@ -1,9 +1,9 @@
 /// Constantes de l'API
 class ApiConstants {
   // URL de base de l'API (à modifier selon votre configuration)
-  static const String baseUrl = 'http://10.0.2.2:5000/api'; // Pour émulateur Android
-  // static const String baseUrl = 'http://localhost:5000/api'; // Pour iOS/Web
-  // static const String baseUrl = 'http://192.168.1.XXX:5000/api'; // Pour appareil physique
+  // static const String baseUrl = 'http://10.0.2.2:5000/api'; // Pour émulateur Android
+  static const String baseUrl = 'http://localhost:5000/api'; // Pour Linux/Web/iOS
+  // static const String baseUrl = 'http://192.168.1.74:5000/api'; // Pour appareil physique (remplacer par votre IP)
   
   // Timeouts
   static const Duration connectTimeout = Duration(seconds: 30);

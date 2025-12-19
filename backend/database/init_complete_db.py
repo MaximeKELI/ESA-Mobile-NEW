@@ -6,6 +6,7 @@ import sqlite3
 import os
 from pathlib import Path
 from flask_bcrypt import Bcrypt
+import sys
 
 bcrypt = Bcrypt()
 
@@ -71,11 +72,11 @@ def init_complete_database():
     print(f"✅ Base de données initialisée avec succès: {db_path}")
     print("")
     print("🔑 Utilisateurs de test créés:")
-    print("   - admin / admin123 (Administrateur)")
-    print("   - comptable / comptable123 (Comptabilité)")
-    print("   - enseignant1 / enseignant123 (Enseignant)")
-    print("   - etudiant1 / etudiant123 (Étudiant)")
-    print("   - parent1 / parent123 (Parent)")
+    print("   - admin / password123 (Administrateur)")
+    print("   - comptable / password123 (Comptabilité)")
+    print("   - enseignant1 / password123 (Enseignant)")
+    print("   - etudiant1 / password123 (Étudiant)")
+    print("   - parent1 / password123 (Parent)")
 
 def insert_test_users(cursor):
     """Crée des utilisateurs de test pour tous les rôles"""
@@ -105,31 +106,52 @@ def insert_test_users(cursor):
     ]
     
     for username, email, pwd_hash, role, nom, prenom, telephone, adresse, is_active in users:
-        cursor.execute("""
-            INSERT OR IGNORE INTO users (username, email, password_hash, role, nom, prenom, telephone, adresse, is_active, date_creation)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (username, email, pwd_hash, role, nom, prenom, telephone, adresse, is_active, datetime.now().isoformat()))
+        # Vérifier si l'utilisateur existe déjà
+        existing = cursor.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone()
+        if not existing:
+            cursor.execute("""
+                INSERT INTO users (username, email, password_hash, role, nom, prenom, telephone, adresse, is_active)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (username, email, pwd_hash, role, nom, prenom, telephone, adresse, is_active))
+            user_id = cursor.lastrowid
+        else:
+            user_id = existing[0]
         
         user_id = cursor.lastrowid if cursor.lastrowid else cursor.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone()[0]
         
         # Créer les profils spécifiques selon le rôle
-        if role == "etudiant":
-            cursor.execute("""
-                INSERT OR IGNORE INTO etudiants (user_id, numero_etudiant, date_inscription, is_active)
-                VALUES (?, ?, ?, ?)
-            """, (user_id, f"ETU{user_id:04d}", datetime.now().date().isoformat(), 1))
-        
-        elif role == "enseignant":
-            cursor.execute("""
-                INSERT OR IGNORE INTO enseignants (user_id, numero_enseignant, date_embauche, is_active)
-                VALUES (?, ?, ?, ?)
-            """, (user_id, f"ENS{user_id:04d}", datetime.now().date().isoformat(), 1))
-        
-        elif role == "parent":
-            cursor.execute("""
-                INSERT OR IGNORE INTO parents (user_id, numero_parent, is_active)
-                VALUES (?, ?, ?)
-            """, (user_id, f"PAR{user_id:04d}", 1))
+        try:
+            if role == "etudiant":
+                # Vérifier si l'étudiant existe déjà
+                existing_etudiant = cursor.execute("SELECT id FROM etudiants WHERE user_id = ?", (user_id,)).fetchone()
+                if not existing_etudiant:
+                    # Obtenir l'année académique active
+                    annee_id = cursor.execute("SELECT id FROM annees_academiques WHERE is_active = 1 LIMIT 1").fetchone()
+                    annee_id = annee_id[0] if annee_id else 1
+                    cursor.execute("""
+                        INSERT INTO etudiants (user_id, numero_etudiant, date_inscription, annee_academique_id, is_active)
+                        VALUES (?, ?, ?, ?, ?)
+                    """, (user_id, f"ETU{user_id:04d}", datetime.now().date().isoformat(), annee_id, 1))
+            
+            elif role == "enseignant":
+                # Vérifier si l'enseignant existe déjà
+                existing_enseignant = cursor.execute("SELECT id FROM enseignants WHERE user_id = ?", (user_id,)).fetchone()
+                if not existing_enseignant:
+                    cursor.execute("""
+                        INSERT INTO enseignants (user_id, matricule, date_embauche, is_active)
+                        VALUES (?, ?, ?, ?)
+                    """, (user_id, f"ENS{user_id:04d}", datetime.now().date().isoformat(), 1))
+            
+            elif role == "parent":
+                # Vérifier si le parent existe déjà
+                existing_parent = cursor.execute("SELECT id FROM parents WHERE user_id = ?", (user_id,)).fetchone()
+                if not existing_parent:
+                    cursor.execute("""
+                        INSERT INTO parents (user_id, lien_parente)
+                        VALUES (?, ?)
+                    """, (user_id, "tuteur"))
+        except sqlite3.OperationalError as e:
+            print(f"   ⚠️  Erreur lors de la création du profil {role} pour {username}: {e}")
     
     print(f"   ✅ {len(users)} utilisateurs créés")
 
