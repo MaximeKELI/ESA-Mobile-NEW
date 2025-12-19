@@ -16,6 +16,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AuthProvider>(context).user;
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tableau de bord - Administration'),
@@ -23,16 +25,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {
-              // TODO: Ouvrir les notifications
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Notifications - À implémenter')),
+              );
             },
           ),
           PopupMenuButton(
             icon: const Icon(Icons.account_circle),
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'profile',
                 child: Row(
-                  children: [
+                  children: const [
                     Icon(Icons.person),
                     SizedBox(width: 8),
                     Text('Profil'),
@@ -63,10 +67,136 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             onSelected: (value) {
               if (value == 'logout') {
                 Provider.of<AuthProvider>(context, listen: false).logout();
+              } else if (value == 'profile') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Profil de ${user?.nom ?? "Admin"}')),
+                );
               }
             },
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Text(
+                      (user?.nom != null && user!.nom!.isNotEmpty) 
+                          ? user.nom!.substring(0, 1).toUpperCase() 
+                          : 'A',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: AppTheme.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    '${user?.nom ?? ""} ${user?.prenom ?? ""}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    user?.email ?? '',
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.dashboard),
+              title: const Text('Tableau de bord'),
+              selected: _selectedIndex == 0,
+              onTap: () {
+                setState(() => _selectedIndex = 0);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.people),
+              title: const Text('Utilisateurs'),
+              selected: _selectedIndex == 1,
+              onTap: () {
+                setState(() => _selectedIndex = 1);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.school),
+              title: const Text('Académique'),
+              selected: _selectedIndex == 2,
+              onTap: () {
+                setState(() => _selectedIndex = 2);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.account_balance),
+              title: const Text('Financier'),
+              selected: _selectedIndex == 3,
+              onTap: () {
+                setState(() => _selectedIndex = 3);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Paramètres'),
+              selected: _selectedIndex == 4,
+              onTap: () {
+                setState(() => _selectedIndex = 4);
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Mon profil'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Profil - À implémenter')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.help),
+              title: const Text('Aide'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Aide - À implémenter')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.red),
+              title: const Text('Déconnexion', style: TextStyle(color: Colors.red)),
+              onTap: () {
+                Navigator.pop(context);
+                Provider.of<AuthProvider>(context, listen: false).logout();
+              },
+            ),
+          ],
+        ),
       ),
       body: IndexedStack(
         index: _selectedIndex,

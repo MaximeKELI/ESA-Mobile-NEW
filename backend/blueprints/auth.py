@@ -122,8 +122,9 @@ def register():
         return jsonify({'error': error}), 400
     
     # Validation de l'email
-    if not validate_email_format(data['email']):
-        return jsonify({'error': 'Format d\'email invalide'}), 400
+    email_valid, email_error = validate_email_format(data['email'])
+    if not email_valid:
+        return jsonify({'error': 'Format d\'email invalide', 'details': email_error}), 400
     
     # Validation de la force du mot de passe
     is_strong, errors = validate_password_strength(data['password'])
