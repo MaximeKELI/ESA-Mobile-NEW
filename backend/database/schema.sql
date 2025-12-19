@@ -419,7 +419,7 @@ CREATE TABLE IF NOT EXISTS logs_connexion (
 -- Table des logs d'actions
 CREATE TABLE IF NOT EXISTS logs_actions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
+    user_id INTEGER DEFAULT 0,
     action VARCHAR(100) NOT NULL,
     table_affectee VARCHAR(50),
     enregistrement_id INTEGER,

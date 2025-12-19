@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import '../core/models/user_model.dart';
+import 'package:flutter/foundation.dart';
 import '../core/services/auth_service.dart';
 
 /// Provider pour la gestion de l'authentification
