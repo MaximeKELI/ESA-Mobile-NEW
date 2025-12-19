@@ -140,41 +140,44 @@ def register():
     if sql_check:
         return jsonify({'error': 'Requête invalide'}), 400
     
-    db = get_db()
-    
-    # Vérifier si l'utilisateur existe déjà
-    existing_user = db.execute(
-        "SELECT id FROM users WHERE username = ? OR email = ?",
-        (username, email)
-    ).fetchone()
-    
-    if existing_user:
-        return jsonify({'error': 'Nom d\'utilisateur ou email déjà utilisé'}), 400
-    
-    # Hashage du mot de passe
-    password_hash = hash_password(data['password'])
-    
-    # Créer l'utilisateur
-    cursor = db.execute("""
-        INSERT INTO users (username, email, password_hash, role, nom, prenom, 
-                         telephone, adresse, is_active)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        username,
-        email,
-        password_hash,
-        data['role'],
-        data['nom'],
-        data['prenom'],
-        data.get('telephone'),
-        data.get('adresse'),
-        data.get('is_active', True) if data['role'] != 'etudiant' else False  # Étudiants doivent être activés par admin
-    ))
-    db.commit()
-    user_id = cursor.lastrowid
-    
-    # Créer le profil spécifique selon le rôle
     try:
+        db = get_db()
+        
+        # Vérifier si l'utilisateur existe déjà
+        existing_user = db.execute(
+            "SELECT id FROM users WHERE username = ? OR email = ?",
+            (username, email)
+        ).fetchone()
+        
+        if existing_user:
+            return jsonify({'error': 'Nom d\'utilisateur ou email déjà utilisé'}), 400
+        
+        # Hashage du mot de passe
+        password_hash = hash_password(data['password'])
+        
+        # Déterminer is_active selon le rôle
+        is_active = False if data['role'] == 'etudiant' else True
+        
+        # Créer l'utilisateur
+        cursor = db.execute("""
+            INSERT INTO users (username, email, password_hash, role, nom, prenom, 
+                             telephone, adresse, is_active)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            username,
+            email,
+            password_hash,
+            data['role'],
+            data['nom'],
+            data['prenom'],
+            data.get('telephone'),
+            data.get('adresse'),
+            is_active
+        ))
+        db.commit()
+        user_id = cursor.lastrowid
+        
+        # Créer le profil spécifique selon le rôle
         if data['role'] == 'etudiant':
             # L'étudiant sera créé lors de l'inscription académique
             pass
@@ -203,10 +206,14 @@ def register():
                 import logging
                 logging.warning(f"Erreur lors de la création du profil parent: {e}")
     except Exception as e:
-        # Ne pas faire échouer l'inscription si la création du profil échoue
+        # Gérer les erreurs de base de données
         import logging
-        logging.warning(f"Erreur lors de la création du profil: {e}")
-        db.rollback()
+        logging.error(f"Erreur lors de la création de l'utilisateur: {e}")
+        try:
+            db.rollback()
+        except:
+            pass
+        return jsonify({'error': 'Erreur lors de l\'inscription. Veuillez réessayer.', 'details': str(e)}), 500
     
     # Récupérer l'utilisateur créé avec tous les champs
     user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
