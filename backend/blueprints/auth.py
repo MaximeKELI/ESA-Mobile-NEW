@@ -174,21 +174,39 @@ def register():
     user_id = cursor.lastrowid
     
     # Créer le profil spécifique selon le rôle
-    if data['role'] == 'etudiant':
-        # L'étudiant sera créé lors de l'inscription académique
-        pass
-    elif data['role'] == 'enseignant':
-        db.execute("""
-            INSERT INTO enseignants (user_id, matricule, date_embauche, is_active)
-            VALUES (?, ?, ?, ?)
-        """, (user_id, f"ENS{user_id:04d}", datetime.now().date(), True))
-        db.commit()
-    elif data['role'] == 'parent':
-        db.execute("""
-            INSERT INTO parents (user_id, lien_parente)
-            VALUES (?, ?)
-        """, (user_id, data.get('lien_parente', 'tuteur')))
-        db.commit()
+    try:
+        if data['role'] == 'etudiant':
+            # L'étudiant sera créé lors de l'inscription académique
+            pass
+        elif data['role'] == 'enseignant':
+            try:
+                db.execute("""
+                    INSERT INTO enseignants (user_id, matricule, date_embauche, is_active)
+                    VALUES (?, ?, ?, ?)
+                """, (user_id, f"ENS{user_id:04d}", datetime.now().date(), True))
+                db.commit()
+            except Exception as e:
+                # Si l'insertion échoue, rollback et continuer quand même
+                db.rollback()
+                import logging
+                logging.warning(f"Erreur lors de la création du profil enseignant: {e}")
+        elif data['role'] == 'parent':
+            try:
+                db.execute("""
+                    INSERT INTO parents (user_id, lien_parente)
+                    VALUES (?, ?)
+                """, (user_id, data.get('lien_parente', 'tuteur')))
+                db.commit()
+            except Exception as e:
+                # Si l'insertion échoue, rollback et continuer quand même
+                db.rollback()
+                import logging
+                logging.warning(f"Erreur lors de la création du profil parent: {e}")
+    except Exception as e:
+        # Ne pas faire échouer l'inscription si la création du profil échoue
+        import logging
+        logging.warning(f"Erreur lors de la création du profil: {e}")
+        db.rollback()
     
     # Récupérer l'utilisateur créé avec tous les champs
     user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
