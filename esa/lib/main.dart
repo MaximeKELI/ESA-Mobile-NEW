@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/services/api_service.dart';
 import 'core/services/auth_service.dart';
+import 'core/routes/app_router.dart';
+import 'core/navigation/navigation_service.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'providers/auth_provider.dart';
@@ -32,7 +34,9 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.light,
+        navigatorKey: NavigationService().navigatorKey,
         home: const AuthWrapper(),
+        onGenerateRoute: (settings) => AppRoutes.generateRoute(settings),
       ),
     );
   }
