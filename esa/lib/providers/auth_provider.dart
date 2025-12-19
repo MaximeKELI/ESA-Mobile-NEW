@@ -42,6 +42,52 @@ class AuthProvider with ChangeNotifier {
     if (result['success'] == true) {
       _user = result['user'] as UserModel;
       _error = null;
+      // Forcer la mise à jour pour déclencher la navigation
+      notifyListeners();
+      // Attendre un peu pour s'assurer que l'UI est mise à jour
+      await Future.delayed(const Duration(milliseconds: 100));
+      notifyListeners();
+      return true;
+    } else {
+      _error = result['error'] as String;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Inscription
+  Future<bool> register({
+    required String username,
+    required String email,
+    required String password,
+    required String nom,
+    required String prenom,
+    required String role,
+    String? telephone,
+    String? adresse,
+  }) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    final result = await _authService.register(
+      username: username,
+      email: email,
+      password: password,
+      nom: nom,
+      prenom: prenom,
+      role: role,
+      telephone: telephone,
+      adresse: adresse,
+    );
+
+    _isLoading = false;
+
+    if (result['success'] == true) {
+      _user = result['user'] as UserModel;
+      _error = null;
+      notifyListeners();
+      await Future.delayed(const Duration(milliseconds: 100));
       notifyListeners();
       return true;
     } else {

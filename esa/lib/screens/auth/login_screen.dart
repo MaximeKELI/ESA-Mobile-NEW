@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
 import '../../providers/auth_provider.dart';
+import 'register_screen.dart';
 
 /// Écran de connexion
 class LoginScreen extends StatefulWidget {
@@ -156,6 +157,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                     child: const Text('Mot de passe oublié ?'),
+                  ),
+                  const SizedBox(height: 8),
+                  
+                  // Lien vers inscription
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Pas encore de compte ? '),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text('S\'inscrire'),
+                      ),
+                    ],
                   ),
                 ],
               ),

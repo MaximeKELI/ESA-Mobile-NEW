@@ -92,6 +92,102 @@ def login():
         }
     }), 200
 
+@auth_bp.route('/register', methods=['POST'])
+def register():
+    """Inscription d'un nouvel utilisateur"""
+    data = request.get_json()
+    
+    # Validation
+    valid, error = validate_required(data, ['username', 'email', 'password', 'nom', 'prenom', 'role'])
+    if not valid:
+        return jsonify({'error': error}), 400
+    
+    # Validation de l'email
+    if not validate_email_format(data['email']):
+        return jsonify({'error': 'Format d\'email invalide'}), 400
+    
+    # Validation de la force du mot de passe
+    is_strong, errors = validate_password_strength(data['password'])
+    if not is_strong:
+        return jsonify({'error': 'Mot de passe faible', 'details': errors}), 400
+    
+    # Sanitization
+    username = sanitize_input(data['username'])
+    email = sanitize_input(data['email'])
+    
+    # Vérification d'injection SQL
+    sql_check, sql_error = sql_injection_check({'username': username, 'email': email})
+    if sql_check:
+        return jsonify({'error': 'Requête invalide'}), 400
+    
+    db = get_db()
+    
+    # Vérifier si l'utilisateur existe déjà
+    existing_user = db.execute(
+        "SELECT id FROM users WHERE username = ? OR email = ?",
+        (username, email)
+    ).fetchone()
+    
+    if existing_user:
+        return jsonify({'error': 'Nom d\'utilisateur ou email déjà utilisé'}), 400
+    
+    # Hashage du mot de passe
+    password_hash = hash_password(data['password'])
+    
+    # Créer l'utilisateur
+    cursor = db.execute("""
+        INSERT INTO users (username, email, password_hash, role, nom, prenom, 
+                         telephone, adresse, is_active)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        username,
+        email,
+        password_hash,
+        data['role'],
+        data['nom'],
+        data['prenom'],
+        data.get('telephone'),
+        data.get('adresse'),
+        data.get('is_active', True) if data['role'] != 'etudiant' else False  # Étudiants doivent être activés par admin
+    ))
+    db.commit()
+    user_id = cursor.lastrowid
+    
+    # Créer le profil spécifique selon le rôle
+    if data['role'] == 'etudiant':
+        # L'étudiant sera créé lors de l'inscription académique
+        pass
+    elif data['role'] == 'enseignant':
+        db.execute("""
+            INSERT INTO enseignants (user_id, matricule, date_embauche, is_active)
+            VALUES (?, ?, ?, ?)
+        """, (user_id, f"ENS{user_id:04d}", datetime.now().date(), True))
+        db.commit()
+    elif data['role'] == 'parent':
+        db.execute("""
+            INSERT INTO parents (user_id, lien_parente)
+            VALUES (?, ?)
+        """, (user_id, data.get('lien_parente', 'tuteur')))
+        db.commit()
+    
+    # Récupérer l'utilisateur créé
+    user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+    
+    from utils.auth import log_action
+    log_action(user_id, 'inscription', 'users', user_id)
+    
+    return jsonify({
+        'message': 'Inscription réussie',
+        'user': {
+            'id': user['id'],
+            'username': user['username'],
+            'email': user['email'],
+            'role': user['role'],
+            'nom': user['nom'],
+            'prenom': user['prenom']
+        }
+    }), 201
+
 @auth_bp.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)
 def refresh():

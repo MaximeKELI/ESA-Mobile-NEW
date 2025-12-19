@@ -57,23 +57,87 @@ class AuthService {
         );
 
         // Sauvegarder l'utilisateur
-        _currentUser = UserModel.fromJson(data['user'] as Map<String, dynamic>);
-        await _prefs?.setString('current_user', json.encode(_currentUser!.toJson()));
+        if (data.containsKey('user')) {
+          _currentUser = UserModel.fromJson(data['user'] as Map<String, dynamic>);
+          await _prefs?.setString('current_user', json.encode(_currentUser!.toJson()));
 
-        return {
-          'success': true,
-          'user': _currentUser,
-        };
+          return {
+            'success': true,
+            'user': _currentUser,
+          };
+        } else {
+          return {
+            'success': false,
+            'error': 'Réponse invalide du serveur',
+          };
+        }
       }
 
       return {
         'success': false,
-        'error': 'Identifiants invalides',
+        'error': response.data['error'] ?? 'Identifiants invalides',
       };
     } catch (e) {
       return {
         'success': false,
-        'error': e.toString(),
+        'error': e.toString().contains('SocketException') 
+            ? 'Impossible de se connecter au serveur. Vérifiez que le backend est démarré.'
+            : e.toString(),
+      };
+    }
+  }
+
+  /// Inscription
+  Future<Map<String, dynamic>> register({
+    required String username,
+    required String email,
+    required String password,
+    required String nom,
+    required String prenom,
+    required String role,
+    String? telephone,
+    String? adresse,
+  }) async {
+    try {
+      final response = await _apiService.post(
+        ApiConstants.register,
+        data: {
+          'username': username,
+          'email': email,
+          'password': password,
+          'nom': nom,
+          'prenom': prenom,
+          'role': role,
+          'telephone': telephone,
+          'adresse': adresse,
+        },
+      );
+
+      if (response.statusCode == 201) {
+        final data = response.data as Map<String, dynamic>;
+        
+        if (data.containsKey('user')) {
+          _currentUser = UserModel.fromJson(data['user'] as Map<String, dynamic>);
+          await _prefs?.setString('current_user', json.encode(_currentUser!.toJson()));
+
+          return {
+            'success': true,
+            'user': _currentUser,
+            'message': data['message'] ?? 'Inscription réussie',
+          };
+        }
+      }
+
+      return {
+        'success': false,
+        'error': response.data['error'] ?? 'Erreur lors de l\'inscription',
+      };
+    } catch (e) {
+      return {
+        'success': false,
+        'error': e.toString().contains('SocketException')
+            ? 'Impossible de se connecter au serveur. Vérifiez que le backend est démarré.'
+            : e.toString(),
       };
     }
   }
