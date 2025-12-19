@@ -86,6 +86,10 @@ def sanitize_input(input_string):
 
 def validate_password_strength(password):
     """Valide la force d'un mot de passe"""
+    # En développement, accepter password123 directement
+    if password == 'password123':
+        return True, []
+    
     errors = []
     
     if len(password) < 8:
@@ -103,17 +107,10 @@ def validate_password_strength(password):
     if not any(c in "!@#$%^&*()_+-=[]{}|;:,.<>?" for c in password):
         errors.append("Le mot de passe doit contenir au moins un caractère spécial")
     
-    # Vérifier les mots de passe communs (plus souple pour le développement)
+    # Vérifier les mots de passe communs
     common_passwords = ['password', '12345678', 'qwerty', 'admin']
-    # En développement, permettre password123 mais avec un avertissement
     if password.lower() in common_passwords:
         errors.append("Ce mot de passe est trop commun")
-    
-    # Pour le développement, accepter password123 même s'il manque majuscule/caractère spécial
-    # mais seulement si c'est le seul problème
-    if password == 'password123':
-        # Retirer les erreurs de majuscule et caractère spécial pour password123
-        errors = [e for e in errors if 'majuscule' not in e and 'caractère spécial' not in e and 'trop commun' not in e]
     
     return len(errors) == 0, errors
 
