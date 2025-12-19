@@ -40,11 +40,17 @@ def login():
         log_security_event('rate_limit_exceeded', None, {'ip': ip_address}, 'warning')
         return jsonify({'error': 'Trop de tentatives. Veuillez réessayer plus tard.'}), 429
     
-    db = get_db()
-    user = db.execute(
-        "SELECT * FROM users WHERE username = ? OR email = ?",
-        (username, username)
-    ).fetchone()
+    try:
+        db = get_db()
+        user = db.execute(
+            "SELECT * FROM users WHERE username = ? OR email = ?",
+            (username, username)
+        ).fetchone()
+    except Exception as e:
+        # Erreur de base de données - retourner erreur générique
+        import logging
+        logging.error(f"Erreur DB lors de la connexion: {e}")
+        return jsonify({'error': 'Erreur serveur. Veuillez réessayer.'}), 500
     
     # Log de la tentative de connexion
     user_agent = request.headers.get('User-Agent', '')
@@ -60,17 +66,30 @@ def login():
         return jsonify({'error': 'Compte désactivé'}), 403
     
     # Détection d'activité suspecte
-    is_suspicious, suspicion_reason = detect_suspicious_activity(user['id'], 'login', ip_address)
-    if is_suspicious:
-        log_security_event('suspicious_activity', user['id'], {'reason': suspicion_reason}, 'high')
-        # Ne pas bloquer, mais logger
+    try:
+        is_suspicious, suspicion_reason = detect_suspicious_activity(user['id'], 'login', ip_address)
+        if is_suspicious:
+            log_security_event('suspicious_activity', user['id'], {'reason': suspicion_reason}, 'high')
+            # Ne pas bloquer, mais logger
+    except Exception:
+        # Ne pas bloquer si la détection échoue
+        pass
     
     # Mettre à jour la dernière connexion
-    db.execute(
-        "UPDATE users SET last_login = ? WHERE id = ?",
-        (datetime.now(), user['id'])
-    )
-    db.commit()
+    try:
+        db.execute(
+            "UPDATE users SET last_login = ? WHERE id = ?",
+            (datetime.now(), user['id'])
+        )
+        db.commit()
+    except Exception as e:
+        # Ne pas bloquer si la mise à jour échoue
+        import logging
+        logging.warning(f"Erreur lors de la mise à jour last_login: {e}")
+        try:
+            db.rollback()
+        except:
+            pass
     
     # Log de connexion réussie
     log_connection(user['id'], username, ip_address, user_agent, 'succes', None)
