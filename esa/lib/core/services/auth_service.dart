@@ -16,7 +16,9 @@ class AuthService {
 
   /// Initialise le service
   Future<void> init() async {
-    _prefs = await SharedPreferences.getInstance();
+    if (_prefs == null) {
+      _prefs = await SharedPreferences.getInstance();
+    }
     await _loadUserFromStorage();
   }
 

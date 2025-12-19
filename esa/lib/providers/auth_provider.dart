@@ -24,8 +24,16 @@ class AuthProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
+    await _authService.init();
     _user = _authService.currentUser;
     _isLoading = false;
+    notifyListeners();
+  }
+  
+  /// Recharge l'utilisateur depuis le service
+  Future<void> reloadUser() async {
+    await _authService.init();
+    _user = _authService.currentUser;
     notifyListeners();
   }
 
