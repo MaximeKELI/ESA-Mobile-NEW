@@ -200,6 +200,13 @@ def register():
         pass  # Ne pas bloquer si le logging échoue
     
     # Construire la réponse avec tous les champs nécessaires
+    # SQLite retourne is_active comme 0/1, convertir en booléen
+    is_active_value = user['is_active']
+    if isinstance(is_active_value, (int, bool)):
+        is_active_bool = bool(is_active_value)
+    else:
+        is_active_bool = True  # Par défaut
+    
     user_dict = {
         'id': user['id'],
         'username': user['username'],
@@ -210,7 +217,7 @@ def register():
         'telephone': user.get('telephone'),
         'adresse': user.get('adresse'),
         'photo_path': user.get('photo_path'),
-        'is_active': bool(user['is_active']),
+        'is_active': is_active_bool,
         'last_login': user.get('last_login'),
     }
     

@@ -119,8 +119,17 @@ class AuthService {
         final data = response.data as Map<String, dynamic>;
         
         if (data.containsKey('user')) {
-          _currentUser = UserModel.fromJson(data['user'] as Map<String, dynamic>);
+          final userData = data['user'] as Map<String, dynamic>;
+          
+          // Debug: Afficher les données reçues
+          print('AuthService.register - User data received: $userData');
+          print('AuthService.register - Role: ${userData['role']}');
+          print('AuthService.register - Is Active: ${userData['is_active']}');
+          
+          _currentUser = UserModel.fromJson(userData);
           await _prefs?.setString('current_user', json.encode(_currentUser!.toJson()));
+
+          print('AuthService.register - User created: ${_currentUser?.role}, isActive: ${_currentUser?.isActive}');
 
           return {
             'success': true,
