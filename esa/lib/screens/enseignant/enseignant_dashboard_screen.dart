@@ -198,6 +198,16 @@ class EnseignantDashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
+                MenuCard(
+                  title: 'Messages',
+                  assetPath: AssetConstants.smsAppGif, // GIF animé pour les messages
+                  color: AppTheme.infoColor,
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Messages - À implémenter')),
+                    );
+                  },
+                ),
               ],
             ),
           ],

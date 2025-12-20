@@ -15,8 +15,30 @@ class AssetIcon extends StatelessWidget {
     this.fit = BoxFit.contain,
   });
 
+  /// Vérifie si le fichier est un GIF
+  bool get _isGif => assetPath.toLowerCase().endsWith('.gif');
+
   @override
   Widget build(BuildContext context) {
+    // Pour les GIFs, ne pas utiliser le paramètre color (désactive l'animation)
+    if (_isGif) {
+      return Image.asset(
+        assetPath,
+        width: size ?? 24,
+        height: size ?? 24,
+        fit: fit,
+        // Pas de color pour préserver l'animation
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(
+            Icons.image_not_supported,
+            size: size ?? 24,
+            color: color ?? Colors.grey,
+          );
+        },
+      );
+    }
+    
+    // Pour les autres formats (PNG, JPEG), on peut utiliser color
     return Image.asset(
       assetPath,
       width: size ?? 24,
@@ -24,11 +46,42 @@ class AssetIcon extends StatelessWidget {
       fit: fit,
       color: color,
       errorBuilder: (context, error, stackTrace) {
-        // Fallback vers une icône Material si l'asset n'existe pas
         return Icon(
           Icons.image_not_supported,
           size: size ?? 24,
           color: color ?? Colors.grey,
+        );
+      },
+    );
+  }
+}
+
+/// Widget spécialisé pour afficher des GIFs animés
+class AnimatedGifIcon extends StatelessWidget {
+  final String assetPath;
+  final double? size;
+  final BoxFit fit;
+
+  const AnimatedGifIcon({
+    super.key,
+    required this.assetPath,
+    this.size,
+    this.fit = BoxFit.contain,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      assetPath,
+      width: size ?? 24,
+      height: size ?? 24,
+      fit: fit,
+      // Ne pas utiliser color pour préserver l'animation
+      errorBuilder: (context, error, stackTrace) {
+        return Icon(
+          Icons.animation,
+          size: size ?? 24,
+          color: Colors.grey,
         );
       },
     );

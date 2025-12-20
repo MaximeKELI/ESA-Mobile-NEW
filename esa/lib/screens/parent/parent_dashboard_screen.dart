@@ -190,7 +190,7 @@ class ParentDashboardScreen extends StatelessWidget {
                 ),
                 MenuCard(
                   title: 'Messages',
-                  assetPath: AssetConstants.message,
+                  assetPath: AssetConstants.smsAppGif, // Utiliser le GIF animé pour les messages
                   color: AppTheme.infoColor,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
