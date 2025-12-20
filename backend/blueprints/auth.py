@@ -384,11 +384,19 @@ def get_current_user():
     current_user_id = get_jwt_identity()
     db = get_db()
     
-    user = db.execute("SELECT id, username, email, role, nom, prenom, telephone, adresse, photo_path FROM users WHERE id = ?", 
-                     (current_user_id,)).fetchone()
+    user = db.execute("""
+        SELECT id, username, email, role, nom, prenom, telephone, adresse, photo_path, 
+               is_active, last_login 
+        FROM users 
+        WHERE id = ?
+    """, (current_user_id,)).fetchone()
     
     if not user:
         return jsonify({'error': 'Utilisateur non trouvé'}), 404
     
-    return jsonify(dict(user)), 200
+    user_dict = dict(user)
+    # Convertir is_active (0/1) en booléen
+    user_dict['is_active'] = bool(user_dict.get('is_active', 0))
+    
+    return jsonify(user_dict), 200
 
