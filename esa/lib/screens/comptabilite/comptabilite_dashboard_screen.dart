@@ -128,9 +128,11 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Bienvenue ${user?.prenom ?? "Comptable"} !',
-              style: Theme.of(context).textTheme.headlineMedium,
+            FadeInWidget(
+              child: Text(
+                'Bienvenue ${user?.prenom ?? "Comptable"} !',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
             const SizedBox(height: 24),
             GridView.count(
@@ -141,40 +143,44 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
               mainAxisSpacing: 16,
               childAspectRatio: 1.5,
               children: [
-                MenuCard(
+                AnimatedMenuCard(
                   title: 'Enregistrer paiement',
                   assetPath: AssetConstants.fee,
-                  color: AppTheme.primaryColor,
+                  color: AppThemeEnhanced.primaryColor,
+                  index: 0,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Enregistrer paiement - À implémenter')),
                     );
                   },
                 ),
-                MenuCard(
+                AnimatedMenuCard(
                   title: 'Reçus',
                   assetPath: AssetConstants.downloads,
-                  color: AppTheme.secondaryColor,
+                  color: AppThemeEnhanced.secondaryColor,
+                  index: 1,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Reçus - À implémenter')),
                     );
                   },
                 ),
-                MenuCard(
+                AnimatedMenuCard(
                   title: 'Rapports',
                   assetPath: AssetConstants.downloads,
-                  color: AppTheme.accentColor,
+                  color: AppThemeEnhanced.accentColor,
+                  index: 2,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Rapports - À implémenter')),
                     );
                   },
                 ),
-                MenuCard(
+                AnimatedMenuCard(
                   title: 'Arriérés',
                   assetPath: AssetConstants.fee,
-                  color: AppTheme.errorColor,
+                  color: AppThemeEnhanced.errorColor,
+                  index: 3,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Arriérés - À implémenter')),
