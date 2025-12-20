@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/app_theme_enhanced.dart';
 import 'core/services/api_service.dart';
 import 'core/services/auth_service.dart';
 import 'core/routes/app_router.dart';
@@ -31,12 +32,22 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'ESA - Gestion Scolaire',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        theme: AppThemeEnhanced.lightTheme,
+        darkTheme: AppThemeEnhanced.darkTheme,
         themeMode: ThemeMode.light,
         navigatorKey: NavigationService().navigatorKey,
         home: const AuthWrapper(),
         onGenerateRoute: (settings) => AppRoutes.generateRoute(settings),
+        // Transitions personnalisées
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.macOS: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+          },
+        ),
       ),
     );
   }
