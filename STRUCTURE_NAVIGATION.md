@@ -127,3 +127,4 @@ Pour connecter complètement tous les écrans :
 
 **🎉 Le système de navigation est maintenant centralisé et tous les écrans peuvent être connectés !**
 
+

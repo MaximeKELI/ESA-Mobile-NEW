@@ -74,3 +74,4 @@ def insert_initial_data(cursor):
 if __name__ == "__main__":
     init_database()
 
+

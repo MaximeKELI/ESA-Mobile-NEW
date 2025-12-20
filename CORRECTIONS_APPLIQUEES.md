@@ -146,3 +146,4 @@ python3 tests/test_auth_with_report.py
 
 **🎉 Toutes les corrections sont appliquées ! Redémarrez le serveur et relancez les tests.**
 
+

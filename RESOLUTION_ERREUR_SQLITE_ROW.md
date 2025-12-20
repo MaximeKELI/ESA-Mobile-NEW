@@ -179,3 +179,4 @@ L'inscription devrait maintenant fonctionner correctement pour tous les rôles (
 
 **🔧 Redémarrer le serveur et tester l'inscription !**
 
+

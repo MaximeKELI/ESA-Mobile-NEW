@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/constants/asset_constants.dart';
 import '../../providers/auth_provider.dart';
 import 'register_screen.dart';
 
@@ -66,10 +67,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Logo et titre
-                  Icon(
-                    Icons.school,
-                    size: 80,
-                    color: AppTheme.primaryColor,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      AssetConstants.logo,
+                      height: 80,
+                      width: 80,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        // Fallback vers l'icône si le logo ne charge pas
+                        return Icon(
+                          Icons.school,
+                          size: 80,
+                          color: AppTheme.primaryColor,
+                        );
+                      },
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(

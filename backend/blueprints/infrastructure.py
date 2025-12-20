@@ -300,3 +300,4 @@ def create_maintenance():
     log_action(get_current_user()['id'], 'creation_maintenance', 'maintenances', cursor.lastrowid)
     return jsonify({'message': 'Maintenance créée avec succès', 'maintenance_id': cursor.lastrowid}), 201
 
+

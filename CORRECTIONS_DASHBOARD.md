@@ -107,3 +107,4 @@ Les fonctionnalités sont prêtes mais affichent des messages "À implémenter" 
 
 **🎉 Tous les dashboards ont maintenant un Drawer et un contenu de base !**
 
+

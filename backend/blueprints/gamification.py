@@ -177,3 +177,4 @@ def calculate_level(points):
     else:
         return {'niveau': 5, 'nom': 'Maître', 'points_restants': 0}
 
+

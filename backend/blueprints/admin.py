@@ -544,3 +544,4 @@ def get_dashboard_stats():
         'total_absences_mois': total_absences
     }), 200
 
+

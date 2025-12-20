@@ -144,3 +144,4 @@ navService.navigateTo(AppRoutes.login);
 
 **🎉 Tous les fichiers frontend sont maintenant correctement connectés et peuvent communiquer entre eux !**
 
+

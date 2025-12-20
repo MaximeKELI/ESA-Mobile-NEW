@@ -253,3 +253,4 @@ def create_concours():
     log_action(get_current_user()['id'], 'creation_concours', 'concours', cursor.lastrowid)
     return jsonify({'message': 'Concours créé avec succès'}), 201
 
+

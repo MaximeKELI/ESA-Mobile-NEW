@@ -71,3 +71,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  
+  # Assets
+  assets:
+    - lib/assets/
+    - lib/assets/Image&Gif/

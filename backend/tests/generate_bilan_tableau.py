@@ -195,3 +195,4 @@ if __name__ == "__main__":
         f.write(bilan)
     print(f"\n📄 Bilan sauvegardé: {report_file}")
 
+

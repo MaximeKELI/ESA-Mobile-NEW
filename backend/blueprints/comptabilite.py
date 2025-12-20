@@ -315,3 +315,4 @@ def update_tranches(db, etudiant_id, type_frais_id, montant):
         """, (nouveau_montant_paye, statut, tranche['id']))
         db.commit()
 
+

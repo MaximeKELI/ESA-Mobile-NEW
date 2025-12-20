@@ -72,3 +72,4 @@ flask-compress==1.14
 # Rate Limiting (alternative)
 slowapi==0.1.9
 
+

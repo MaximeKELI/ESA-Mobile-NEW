@@ -50,3 +50,4 @@ if __name__ == "__main__":
     print(f"Login: {'✅ OK' if login_ok else '❌ ÉCHEC'}")
     print(f"Register: {'✅ OK' if register_ok else '❌ ÉCHEC'}")
 
+

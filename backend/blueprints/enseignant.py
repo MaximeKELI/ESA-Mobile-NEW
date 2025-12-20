@@ -340,3 +340,4 @@ def calculate_classement(db, etudiant_id, classe_id):
     
     db.commit()
 
+

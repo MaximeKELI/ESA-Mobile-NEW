@@ -620,3 +620,4 @@ CREATE INDEX IF NOT EXISTS idx_instances_workflow ON instances_workflow(statut, 
 CREATE INDEX IF NOT EXISTS idx_portfolios_etudiant ON portfolios(etudiant_id);
 CREATE INDEX IF NOT EXISTS idx_badges_obtenus ON badges_obtenus(user_id);
 
+

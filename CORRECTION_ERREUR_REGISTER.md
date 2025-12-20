@@ -95,3 +95,4 @@ curl -X POST http://localhost:5000/api/auth/register \
 
 **🔧 Erreur corrigée ! Redémarrer le serveur et tester.**
 
+

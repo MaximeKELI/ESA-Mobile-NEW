@@ -73,3 +73,4 @@ if __name__ == "__main__":
         status = "✅ OK" if success else "❌ ÉCHEC"
         print(f"{role.capitalize():<15} : {status}")
 
+

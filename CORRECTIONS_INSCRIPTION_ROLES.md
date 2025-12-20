@@ -109,3 +109,4 @@ python3 app.py
 
 **🔧 Corrections appliquées ! Redémarrer le serveur et tester l'inscription parent/enseignant.**
 
+

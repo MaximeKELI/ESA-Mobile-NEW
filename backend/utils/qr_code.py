@@ -31,3 +31,4 @@ def generate_student_qr(etudiant_id, numero_etudiant, output_dir):
     generate_qr_code(data, output_path)
     return output_path
 
+

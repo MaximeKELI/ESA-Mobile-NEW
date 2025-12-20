@@ -283,3 +283,4 @@ def create_evaluation_stage():
     
     return jsonify({'message': 'Évaluation créée avec succès', 'evaluation_id': cursor.lastrowid}), 201
 
+

@@ -336,3 +336,4 @@ def update_progression(cours_id):
     
     return jsonify({'message': 'Progression mise à jour'}), 200
 
+

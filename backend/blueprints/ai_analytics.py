@@ -290,3 +290,4 @@ def recommend_pathway():
         'recommandations': recommandations
     }), 200
 
+

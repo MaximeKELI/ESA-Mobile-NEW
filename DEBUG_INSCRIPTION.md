@@ -145,3 +145,4 @@ if (authProvider.isAuthenticated && authProvider.user != null) {
 
 **🔧 Correction appliquée : Réponse backend complète avec tous les champs nécessaires**
 
+

@@ -288,3 +288,4 @@ if __name__ == "__main__":
     
     print("\n📄 Résultats sauvegardés dans security_check_results.json")
 
+

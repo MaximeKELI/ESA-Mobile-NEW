@@ -176,3 +176,4 @@ GET /api/gamification/defis
 
 **Prochaine étape recommandée** : Implémenter la gamification complète (frontend + tests)
 
+

@@ -135,3 +135,4 @@ python3 tests/test_connection_inscription.py
 
 **🎉 Excellent progrès ! 90% de réussite, bientôt 100% après correction de la validation d'email.**
 
+

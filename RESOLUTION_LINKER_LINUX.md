@@ -109,3 +109,4 @@ pkg-config --exists libsecret-1 && echo "libsecret OK" || echo "libsecret manqua
 
 Les modifications dans `CMakeLists.txt` ont déjà été faites pour lier GLib explicitement. Le problème vient probablement de dépendances système manquantes ou de versions incompatibles.
 
+

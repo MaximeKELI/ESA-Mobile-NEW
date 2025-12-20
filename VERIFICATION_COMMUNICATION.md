@@ -355,3 +355,4 @@ Tous les composants sont correctement configurés et prêts à communiquer. Il s
 
 **📝 Note:** Ce rapport a été généré alors que le serveur backend n'était pas en cours d'exécution. Relancer les tests après le démarrage du serveur pour une validation complète.
 
+

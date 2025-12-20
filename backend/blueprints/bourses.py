@@ -223,3 +223,4 @@ def get_etudiant_bourses(etudiant_id):
     
     return jsonify([dict(b) for b in bourses]), 200
 
+

@@ -137,3 +137,4 @@ Vérifiez que tous les blueprints sont bien importés dans `app.py`.
 
 **Les modules sont maintenant prêts à être utilisés ! 🎉**
 
+

@@ -299,3 +299,4 @@ curl http://localhost:5000/api/health
 
 L'application dispose maintenant de **10 fonctionnalités avancées complètes** qui permettent de gérer une école/université de manière moderne et efficace.
 
+

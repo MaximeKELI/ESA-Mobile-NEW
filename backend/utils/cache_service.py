@@ -69,3 +69,4 @@ def clear_user_cache(user_id):
     cache.delete(f"user:{user_id}:permissions")
     cache.delete(f"user:{user_id}:notifications")
 
+

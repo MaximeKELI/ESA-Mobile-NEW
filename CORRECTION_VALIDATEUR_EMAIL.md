@@ -69,3 +69,4 @@ python3 tests/test_enseignant_frontend.py
 
 **🔧 Correction appliquée ! Redémarrer le serveur pour tester.**
 
+

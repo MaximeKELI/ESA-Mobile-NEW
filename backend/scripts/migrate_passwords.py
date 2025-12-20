@@ -50,3 +50,4 @@ def migrate_passwords(db_path='database/esa.db'):
 if __name__ == "__main__":
     migrate_passwords()
 
+

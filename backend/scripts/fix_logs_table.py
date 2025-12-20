@@ -58,3 +58,4 @@ def fix_logs_table():
 if __name__ == "__main__":
     fix_logs_table()
 
+

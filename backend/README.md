@@ -117,3 +117,4 @@ Pour la production :
 5. Utiliser bcrypt pour le hashage des mots de passe
 6. Configurer la sauvegarde automatique de la base de données
 
+

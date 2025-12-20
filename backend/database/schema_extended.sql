@@ -857,3 +857,4 @@ CREATE INDEX IF NOT EXISTS idx_conventions_etudiant ON conventions_stage(etudian
 CREATE INDEX IF NOT EXISTS idx_evenements_date ON evenements(date_debut);
 CREATE INDEX IF NOT EXISTS idx_diplomes_etudiant ON diplomes(etudiant_id);
 
+

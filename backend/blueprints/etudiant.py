@@ -382,3 +382,4 @@ def check_unpaid_fees(db, etudiant_id):
     
     return False
 
+

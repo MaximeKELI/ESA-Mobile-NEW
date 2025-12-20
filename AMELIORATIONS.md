@@ -518,3 +518,4 @@ Guide pour nouveaux utilisateurs
 - Formation des utilisateurs pour nouvelles fonctionnalités
 - Feedback utilisateurs pour priorisation
 
+
