@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_theme_enhanced.dart';
 import '../../core/constants/asset_constants.dart';
 import '../../core/widgets/asset_icon.dart';
 import '../../core/widgets/menu_card.dart';
+import '../../core/widgets/animated_stat_card.dart';
+import '../../core/widgets/fade_in_widget.dart';
 import '../../providers/auth_provider.dart';
 
 /// Tableau de bord administrateur
@@ -280,29 +283,33 @@ class _DashboardTab extends StatelessWidget {
             mainAxisSpacing: 16,
             childAspectRatio: 1.5,
             children: [
-              _StatCard(
+              AnimatedStatCard(
                 title: 'Étudiants',
                 value: '0',
                 assetPath: AssetConstants.classroom,
-                color: AppTheme.primaryColor,
+                color: AppThemeEnhanced.primaryColor,
+                index: 0,
               ),
-              _StatCard(
+              AnimatedStatCard(
                 title: 'Enseignants',
                 value: '0',
                 assetPath: AssetConstants.profile,
-                color: AppTheme.secondaryColor,
+                color: AppThemeEnhanced.secondaryColor,
+                index: 1,
               ),
-              _StatCard(
+              AnimatedStatCard(
                 title: 'Classes',
                 value: '0',
                 assetPath: AssetConstants.classroom,
-                color: AppTheme.accentColor,
+                color: AppThemeEnhanced.accentColor,
+                index: 2,
               ),
-              _StatCard(
+              AnimatedStatCard(
                 title: 'Taux de réussite',
                 value: '0%',
                 assetPath: AssetConstants.exam,
-                color: AppTheme.successColor,
+                color: AppThemeEnhanced.successColor,
+                index: 3,
               ),
             ],
           ),
@@ -312,48 +319,6 @@ class _DashboardTab extends StatelessWidget {
   }
 }
 
-class _StatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final String assetPath;
-  final Color color;
-
-  const _StatCard({
-    required this.title,
-    required this.value,
-    required this.assetPath,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AssetIcon(assetPath: assetPath, size: 40, color: color),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodySmall,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class _UsersTab extends StatelessWidget {
   const _UsersTab();
