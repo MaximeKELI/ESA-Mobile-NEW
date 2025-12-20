@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'core/theme/app_theme.dart';
 import 'core/theme/app_theme_enhanced.dart';
 import 'core/services/api_service.dart';
 import 'core/services/auth_service.dart';
@@ -38,16 +37,6 @@ class MyApp extends StatelessWidget {
         navigatorKey: NavigationService().navigatorKey,
         home: const AuthWrapper(),
         onGenerateRoute: (settings) => AppRoutes.generateRoute(settings),
-        // Transitions personnalisées
-        pageTransitionsTheme: const PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
-            TargetPlatform.macOS: FadeUpwardsPageTransitionsBuilder(),
-            TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
-          },
-        ),
       ),
     );
   }

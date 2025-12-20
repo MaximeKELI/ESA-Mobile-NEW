@@ -4,7 +4,6 @@ import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_theme_enhanced.dart';
 import '../../core/constants/asset_constants.dart';
 import '../../core/widgets/asset_icon.dart';
-import '../../core/widgets/menu_card.dart';
 import '../../core/widgets/animated_menu_card.dart';
 import '../../core/widgets/fade_in_widget.dart';
 import '../../providers/auth_provider.dart';
@@ -42,9 +41,10 @@ class EnseignantDashboardScreen extends StatelessWidget {
                         height: 60,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
+                          final nom = user?.nom;
                           return Text(
-                            (user?.nom != null && user!.nom!.isNotEmpty) 
-                                ? user.nom!.substring(0, 1).toUpperCase() 
+                            (nom != null && nom.isNotEmpty) 
+                                ? nom.substring(0, 1).toUpperCase() 
                                 : 'E',
                             style: TextStyle(
                               fontSize: 24,

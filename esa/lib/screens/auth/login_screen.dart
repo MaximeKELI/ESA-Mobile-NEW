@@ -5,7 +5,6 @@ import '../../core/theme/app_theme_enhanced.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/constants/asset_constants.dart';
 import '../../core/widgets/fade_in_widget.dart';
-import '../../core/widgets/animated_entrance_widget.dart';
 import '../../providers/auth_provider.dart';
 import 'register_screen.dart';
 
