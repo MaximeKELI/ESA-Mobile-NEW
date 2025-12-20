@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_theme_enhanced.dart';
 import '../../core/constants/asset_constants.dart';
 import '../../core/widgets/asset_icon.dart';
 import '../../core/widgets/menu_card.dart';
+import '../../core/widgets/animated_menu_card.dart';
+import '../../core/widgets/fade_in_widget.dart';
 
 /// Tableau de bord parent
 class ParentDashboardScreen extends StatelessWidget {
@@ -135,9 +138,11 @@ class ParentDashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Bienvenue ${user?.prenom ?? "Parent"} !',
-              style: Theme.of(context).textTheme.headlineMedium,
+            FadeInWidget(
+              child: Text(
+                'Bienvenue ${user?.prenom ?? "Parent"} !',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
             const SizedBox(height: 24),
             GridView.count(
