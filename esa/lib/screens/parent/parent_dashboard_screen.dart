@@ -5,7 +5,6 @@ import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_theme_enhanced.dart';
 import '../../core/constants/asset_constants.dart';
 import '../../core/widgets/asset_icon.dart';
-import '../../core/widgets/menu_card.dart';
 import '../../core/widgets/animated_menu_card.dart';
 import '../../core/widgets/fade_in_widget.dart';
 
