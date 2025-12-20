@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_theme_enhanced.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/constants/asset_constants.dart';
+import '../../core/widgets/fade_in_widget.dart';
+import '../../core/widgets/animated_entrance_widget.dart';
 import '../../providers/auth_provider.dart';
 import 'register_screen.dart';
 
@@ -66,35 +69,64 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Logo et titre
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      AssetConstants.logo,
-                      height: 80,
-                      width: 80,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        // Fallback vers l'icône si le logo ne charge pas
-                        return Icon(
-                          Icons.school,
-                          size: 80,
-                          color: AppTheme.primaryColor,
-                        );
-                      },
+                  // Logo et titre avec animations
+                  AnimatedEntranceWidget(
+                    delay: const Duration(milliseconds: 100),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          gradient: AppThemeEnhanced.primaryGradient,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppThemeEnhanced.primaryColor.withOpacity(0.3),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: ClipOval(
+                          child: Image.asset(
+                            AssetConstants.logo,
+                            height: 80,
+                            width: 80,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Icon(
+                                Icons.school,
+                                size: 80,
+                                color: Colors.white,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    AppConstants.schoolName,
-                    style: Theme.of(context).textTheme.displaySmall,
-                    textAlign: TextAlign.center,
+                  const SizedBox(height: 24),
+                  FadeInWidget(
+                    delay: const Duration(milliseconds: 300),
+                    child: Text(
+                      AppConstants.schoolName,
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    AppConstants.schoolLocation,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
+                  FadeInWidget(
+                    delay: const Duration(milliseconds: 400),
+                    child: Text(
+                      AppConstants.schoolLocation,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppThemeEnhanced.textSecondary,
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   const SizedBox(height: 48),
                   
