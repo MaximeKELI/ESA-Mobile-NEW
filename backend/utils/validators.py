@@ -8,7 +8,9 @@ from email_validator import validate_email, EmailNotValidError
 def validate_email_format(email):
     """Valide le format d'un email"""
     try:
-        validate_email(email)
+        # check_deliverability=False pour ne pas vérifier l'existence du domaine
+        # Utile en développement avec des domaines de test
+        validate_email(email, check_deliverability=False)
         return True, None
     except EmailNotValidError as e:
         return False, str(e)
