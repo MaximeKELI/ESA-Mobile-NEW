@@ -41,9 +41,10 @@ class ParentDashboardScreen extends StatelessWidget {
                         height: 60,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
+                          final nom = user?.nom;
                           return Text(
-                            (user?.nom != null && user!.nom!.isNotEmpty) 
-                                ? user.nom!.substring(0, 1).toUpperCase() 
+                            (nom != null && nom.isNotEmpty) 
+                                ? nom.substring(0, 1).toUpperCase() 
                                 : 'P',
                             style: TextStyle(
                               fontSize: 24,
