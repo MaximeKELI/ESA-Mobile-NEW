@@ -128,9 +128,11 @@ class EnseignantDashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Bienvenue ${user?.prenom ?? "Enseignant"} !',
-              style: Theme.of(context).textTheme.headlineMedium,
+            FadeInWidget(
+              child: Text(
+                'Bienvenue ${user?.prenom ?? "Enseignant"} !',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
             const SizedBox(height: 24),
             GridView.count(
