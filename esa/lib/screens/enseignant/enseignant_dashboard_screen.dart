@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/app_theme_enhanced.dart';
 import '../../core/constants/asset_constants.dart';
 import '../../core/widgets/asset_icon.dart';
 import '../../core/widgets/menu_card.dart';
+import '../../core/widgets/animated_menu_card.dart';
+import '../../core/widgets/fade_in_widget.dart';
 import '../../providers/auth_provider.dart';
 
 /// Tableau de bord enseignant
@@ -138,70 +141,77 @@ class EnseignantDashboardScreen extends StatelessWidget {
               mainAxisSpacing: 16,
               childAspectRatio: 1.5,
               children: [
-                MenuCard(
+                AnimatedMenuCard(
                   title: 'Saisir notes',
                   assetPath: AssetConstants.exam,
-                  color: AppTheme.primaryColor,
+                  color: AppThemeEnhanced.primaryColor,
+                  index: 0,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Saisir les notes - À implémenter')),
                     );
                   },
                 ),
-                MenuCard(
+                AnimatedMenuCard(
                   title: 'Mes classes',
                   assetPath: AssetConstants.classroom,
-                  color: AppTheme.secondaryColor,
+                  color: AppThemeEnhanced.secondaryColor,
+                  index: 1,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Mes classes - À implémenter')),
                     );
                   },
                 ),
-                MenuCard(
+                AnimatedMenuCard(
                   title: 'Absences',
                   assetPath: AssetConstants.attendance,
-                  color: AppTheme.accentColor,
+                  color: AppThemeEnhanced.accentColor,
+                  index: 2,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Absences - À implémenter')),
                     );
                   },
                 ),
-                MenuCard(
+                AnimatedMenuCard(
                   title: 'Emploi du temps',
                   assetPath: AssetConstants.calendar,
-                  color: AppTheme.successColor,
+                  color: AppThemeEnhanced.successColor,
+                  index: 3,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Emploi du temps - À implémenter')),
                     );
                   },
                 ),
-                MenuCard(
+                AnimatedMenuCard(
                   title: 'Devoirs',
                   assetPath: AssetConstants.homework,
-                  color: AppTheme.infoColor,
+                  color: AppThemeEnhanced.infoColor,
+                  index: 4,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Devoirs - À implémenter')),
                     );
                   },
                 ),
-                MenuCard(
+                AnimatedMenuCard(
                   title: 'Demande congé',
                   assetPath: AssetConstants.leaveApply,
-                  color: AppTheme.warningColor,
+                  color: AppThemeEnhanced.warningColor,
+                  index: 5,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Demande de congé - À implémenter')),
                     );
                   },
                 ),
-                MenuCard(
+                AnimatedMenuCard(
                   title: 'Messages',
-                  assetPath: AssetConstants.smsAppGif, // GIF animé pour les messages
-                  color: AppTheme.infoColor,
+                  assetPath: AssetConstants.smsAppGif,
+                  color: AppThemeEnhanced.infoColor,
+                  index: 6,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Messages - À implémenter')),

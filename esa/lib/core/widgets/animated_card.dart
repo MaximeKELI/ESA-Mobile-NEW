@@ -33,7 +33,6 @@ class _AnimatedCardState extends State<AnimatedCard>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _elevationAnimation;
-  bool _isHovered = false;
 
   @override
   void initState() {
