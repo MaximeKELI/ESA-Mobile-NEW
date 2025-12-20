@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/constants/asset_constants.dart';
+import '../../core/widgets/asset_icon.dart';
+import '../../core/widgets/menu_card.dart';
 import '../../providers/auth_provider.dart';
 
 /// Tableau de bord enseignant
@@ -29,14 +32,24 @@ class EnseignantDashboardScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.white,
-                    child: Text(
-                      (user?.nom != null && user!.nom!.isNotEmpty) 
-                          ? user.nom!.substring(0, 1).toUpperCase() 
-                          : 'E',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: AppTheme.primaryColor,
-                        fontWeight: FontWeight.bold,
+                    child: ClipOval(
+                      child: Image.asset(
+                        AssetConstants.profile,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Text(
+                            (user?.nom != null && user!.nom!.isNotEmpty) 
+                                ? user.nom!.substring(0, 1).toUpperCase() 
+                                : 'E',
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: AppTheme.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -61,12 +74,12 @@ class EnseignantDashboardScreen extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.dashboard),
+              leading: AssetIcon(assetPath: AssetConstants.home),
               title: const Text('Tableau de bord'),
               onTap: () => Navigator.pop(context),
             ),
             ListTile(
-              leading: const Icon(Icons.assignment),
+              leading: AssetIcon(assetPath: AssetConstants.exam),
               title: const Text('Saisir les notes'),
               onTap: () {
                 Navigator.pop(context);
@@ -76,7 +89,7 @@ class EnseignantDashboardScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.people),
+              leading: AssetIcon(assetPath: AssetConstants.classroom),
               title: const Text('Mes classes'),
               onTap: () {
                 Navigator.pop(context);
@@ -86,7 +99,7 @@ class EnseignantDashboardScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.person),
+              leading: AssetIcon(assetPath: AssetConstants.profile),
               title: const Text('Mon profil'),
               onTap: () {
                 Navigator.pop(context);
@@ -97,7 +110,7 @@ class EnseignantDashboardScreen extends StatelessWidget {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.logout, color: Colors.red),
+              leading: AssetIcon(assetPath: AssetConstants.exit, color: Colors.red),
               title: const Text('Déconnexion', style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
@@ -125,9 +138,9 @@ class EnseignantDashboardScreen extends StatelessWidget {
               mainAxisSpacing: 16,
               childAspectRatio: 1.5,
               children: [
-                _MenuCard(
+                MenuCard(
                   title: 'Saisir notes',
-                  icon: Icons.assignment,
+                  assetPath: AssetConstants.exam,
                   color: AppTheme.primaryColor,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -135,9 +148,9 @@ class EnseignantDashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
-                _MenuCard(
+                MenuCard(
                   title: 'Mes classes',
-                  icon: Icons.people,
+                  assetPath: AssetConstants.classroom,
                   color: AppTheme.secondaryColor,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -145,9 +158,9 @@ class EnseignantDashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
-                _MenuCard(
+                MenuCard(
                   title: 'Absences',
-                  icon: Icons.event_busy,
+                  assetPath: AssetConstants.attendance,
                   color: AppTheme.accentColor,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -155,13 +168,33 @@ class EnseignantDashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
-                _MenuCard(
+                MenuCard(
                   title: 'Emploi du temps',
-                  icon: Icons.calendar_today,
+                  assetPath: AssetConstants.calendar,
                   color: AppTheme.successColor,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Emploi du temps - À implémenter')),
+                    );
+                  },
+                ),
+                MenuCard(
+                  title: 'Devoirs',
+                  assetPath: AssetConstants.homework,
+                  color: AppTheme.infoColor,
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Devoirs - À implémenter')),
+                    );
+                  },
+                ),
+                MenuCard(
+                  title: 'Demande congé',
+                  assetPath: AssetConstants.leaveApply,
+                  color: AppTheme.warningColor,
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Demande de congé - À implémenter')),
                     );
                   },
                 ),
@@ -174,41 +207,4 @@ class EnseignantDashboardScreen extends StatelessWidget {
   }
 }
 
-class _MenuCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _MenuCard({
-    required this.title,
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 40, color: color),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 

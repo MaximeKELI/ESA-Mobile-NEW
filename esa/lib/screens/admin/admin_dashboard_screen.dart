@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/constants/asset_constants.dart';
+import '../../core/widgets/asset_icon.dart';
 import '../../providers/auth_provider.dart';
 
 /// Tableau de bord administrateur
@@ -23,7 +25,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         title: const Text('Tableau de bord - Administration'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications),
+            icon: AssetIconWithBadge(
+              assetPath: AssetConstants.notification,
+              badgeCount: 0, // TODO: Récupérer le nombre réel de notifications
+            ),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Notifications - À implémenter')),
@@ -31,7 +36,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             },
           ),
           PopupMenuButton(
-            icon: const Icon(Icons.account_circle),
+            icon: AssetIcon(assetPath: AssetConstants.profile, size: 28),
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'profile',
@@ -90,14 +95,24 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.white,
-                    child: Text(
-                      (user?.nom != null && user!.nom!.isNotEmpty) 
-                          ? user.nom!.substring(0, 1).toUpperCase() 
-                          : 'A',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: AppTheme.primaryColor,
-                        fontWeight: FontWeight.bold,
+                    child: ClipOval(
+                      child: Image.asset(
+                        AssetConstants.profile,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Text(
+                            (user?.nom != null && user!.nom!.isNotEmpty) 
+                                ? user.nom!.substring(0, 1).toUpperCase() 
+                                : 'A',
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: AppTheme.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -122,7 +137,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.dashboard),
+              leading: AssetIcon(assetPath: AssetConstants.home),
               title: const Text('Tableau de bord'),
               selected: _selectedIndex == 0,
               onTap: () {
@@ -131,7 +146,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.people),
+              leading: AssetIcon(assetPath: AssetConstants.classroom),
               title: const Text('Utilisateurs'),
               selected: _selectedIndex == 1,
               onTap: () {
@@ -140,7 +155,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.school),
+              leading: AssetIcon(assetPath: AssetConstants.schoolBuilding),
               title: const Text('Académique'),
               selected: _selectedIndex == 2,
               onTap: () {
@@ -149,7 +164,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.account_balance),
+              leading: AssetIcon(assetPath: AssetConstants.fee),
               title: const Text('Financier'),
               selected: _selectedIndex == 3,
               onTap: () {
@@ -158,7 +173,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.settings),
+              leading: AssetIcon(assetPath: AssetConstants.settingGif),
               title: const Text('Paramètres'),
               selected: _selectedIndex == 4,
               onTap: () {
@@ -168,7 +183,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.person),
+              leading: AssetIcon(assetPath: AssetConstants.profile),
               title: const Text('Mon profil'),
               onTap: () {
                 Navigator.pop(context);
@@ -188,7 +203,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.logout, color: Colors.red),
+              leading: AssetIcon(assetPath: AssetConstants.exit, color: Colors.red),
               title: const Text('Déconnexion', style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
@@ -213,25 +228,25 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         onDestinationSelected: (index) {
           setState(() => _selectedIndex = index);
         },
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.dashboard),
+            icon: ImageIcon(AssetImage(AssetConstants.home), size: 24),
             label: 'Tableau de bord',
           ),
           NavigationDestination(
-            icon: Icon(Icons.people),
+            icon: ImageIcon(AssetImage(AssetConstants.classroom), size: 24),
             label: 'Utilisateurs',
           ),
           NavigationDestination(
-            icon: Icon(Icons.school),
+            icon: ImageIcon(AssetImage(AssetConstants.schoolBuilding), size: 24),
             label: 'Académique',
           ),
           NavigationDestination(
-            icon: Icon(Icons.account_balance),
+            icon: ImageIcon(AssetImage(AssetConstants.fee), size: 24),
             label: 'Financier',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings),
+            icon: ImageIcon(AssetImage(AssetConstants.settingGif), size: 24),
             label: 'Paramètres',
           ),
         ],
@@ -266,25 +281,25 @@ class _DashboardTab extends StatelessWidget {
               _StatCard(
                 title: 'Étudiants',
                 value: '0',
-                icon: Icons.people,
+                assetPath: AssetConstants.classroom,
                 color: AppTheme.primaryColor,
               ),
               _StatCard(
                 title: 'Enseignants',
                 value: '0',
-                icon: Icons.person,
+                assetPath: AssetConstants.profile,
                 color: AppTheme.secondaryColor,
               ),
               _StatCard(
                 title: 'Classes',
                 value: '0',
-                icon: Icons.class_,
+                assetPath: AssetConstants.classroom,
                 color: AppTheme.accentColor,
               ),
               _StatCard(
                 title: 'Taux de réussite',
                 value: '0%',
-                icon: Icons.trending_up,
+                assetPath: AssetConstants.exam,
                 color: AppTheme.successColor,
               ),
             ],
@@ -298,13 +313,13 @@ class _DashboardTab extends StatelessWidget {
 class _StatCard extends StatelessWidget {
   final String title;
   final String value;
-  final IconData icon;
+  final String assetPath;
   final Color color;
 
   const _StatCard({
     required this.title,
     required this.value,
-    required this.icon,
+    required this.assetPath,
     required this.color,
   });
 
@@ -316,7 +331,7 @@ class _StatCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: color),
+            AssetIcon(assetPath: assetPath, size: 40, color: color),
             const SizedBox(height: 8),
             Text(
               value,

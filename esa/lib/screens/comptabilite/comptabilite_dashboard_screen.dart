@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/constants/asset_constants.dart';
+import '../../core/widgets/asset_icon.dart';
+import '../../core/widgets/menu_card.dart';
 
 /// Tableau de bord comptabilité
 class ComptabiliteDashboardScreen extends StatelessWidget {
@@ -29,14 +32,24 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.white,
-                    child: Text(
-                      (user?.nom != null && user!.nom!.isNotEmpty) 
-                          ? user.nom!.substring(0, 1).toUpperCase() 
-                          : 'C',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: AppTheme.primaryColor,
-                        fontWeight: FontWeight.bold,
+                    child: ClipOval(
+                      child: Image.asset(
+                        AssetConstants.profile,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Text(
+                            (user?.nom != null && user!.nom!.isNotEmpty) 
+                                ? user.nom!.substring(0, 1).toUpperCase() 
+                                : 'C',
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: AppTheme.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -61,12 +74,12 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.dashboard),
+              leading: AssetIcon(assetPath: AssetConstants.home),
               title: const Text('Tableau de bord'),
               onTap: () => Navigator.pop(context),
             ),
             ListTile(
-              leading: const Icon(Icons.payment),
+              leading: AssetIcon(assetPath: AssetConstants.fee),
               title: const Text('Paiements'),
               onTap: () {
                 Navigator.pop(context);
@@ -76,7 +89,7 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.receipt),
+              leading: AssetIcon(assetPath: AssetConstants.downloads),
               title: const Text('Reçus'),
               onTap: () {
                 Navigator.pop(context);
@@ -86,7 +99,7 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.person),
+              leading: AssetIcon(assetPath: AssetConstants.profile),
               title: const Text('Mon profil'),
               onTap: () {
                 Navigator.pop(context);
@@ -97,7 +110,7 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.logout, color: Colors.red),
+              leading: AssetIcon(assetPath: AssetConstants.exit, color: Colors.red),
               title: const Text('Déconnexion', style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
@@ -125,9 +138,9 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
               mainAxisSpacing: 16,
               childAspectRatio: 1.5,
               children: [
-                _MenuCard(
+                MenuCard(
                   title: 'Enregistrer paiement',
-                  icon: Icons.payment,
+                  assetPath: AssetConstants.fee,
                   color: AppTheme.primaryColor,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -135,9 +148,9 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
-                _MenuCard(
+                MenuCard(
                   title: 'Reçus',
-                  icon: Icons.receipt,
+                  assetPath: AssetConstants.downloads,
                   color: AppTheme.secondaryColor,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -145,9 +158,9 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
-                _MenuCard(
+                MenuCard(
                   title: 'Rapports',
-                  icon: Icons.assessment,
+                  assetPath: AssetConstants.downloads,
                   color: AppTheme.accentColor,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -155,9 +168,9 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
-                _MenuCard(
+                MenuCard(
                   title: 'Arriérés',
-                  icon: Icons.warning,
+                  assetPath: AssetConstants.fee,
                   color: AppTheme.errorColor,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -174,41 +187,4 @@ class ComptabiliteDashboardScreen extends StatelessWidget {
   }
 }
 
-class _MenuCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _MenuCard({
-    required this.title,
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 40, color: color),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
